@@ -12,10 +12,13 @@ use Medas\ServiceManager\Interfaces\Validator;
 #[Service]
 class OptionController
 {
+    private \SplObjectStorage $values;
+
     public function __construct(
         private ConfigManager $configManager,
     )
     {
+        $this->values = new \SplObjectStorage();
     }
 
     public function hasValue(ConfigOption $option): bool
@@ -26,6 +29,10 @@ class OptionController
 
     public function getValue(ConfigOption $option): mixed
     {
+        if ($this->values->contains($option)) {
+            return $this->values[$option];
+        }
+
         $path = $this->getPath($option);
 
         if ($this->configManager->hasValue($path)) {
@@ -40,10 +47,12 @@ class OptionController
                 $value = $option->unserialize($value);
             }
 
+            $this->values->attach($option, $value);
             return $value;
         }
 
         elseif ($option->hasDefault()) {
+            $this->values->attach($option, $option->default());
             return $option->default();
         }
 
