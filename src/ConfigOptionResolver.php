@@ -49,12 +49,14 @@ class ConfigOptionResolver implements ParameterResolver
         if (!class_exists($configOptionClass)) {
             throw new ConfigValueDoesNotImplementOptionException($configOptionClass);
         }
+
         /** @var ConfigOption $configOption */
         $configOption = $configOptionClass::instance();
 
         if (!$configOption instanceof ConfigOption) {
             throw new ConfigValueDoesNotImplementOptionException($configOptionClass);
         }
+
         return $configOption;
     }
 }
