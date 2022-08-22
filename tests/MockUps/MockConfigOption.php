@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptionsTest\MockUps;
 
-use Medas\ConfigOptions\ConfigGroup;
-use Medas\ConfigOptions\ConfigOption;
 use Medas\ServiceManager\AsSingleton;
+use Medas\ServiceManager\ConfigOptions\ConfigGroup;
+use Medas\ServiceManager\ConfigOptions\ConfigOption;
 
 class MockConfigOption implements ConfigOption
 {

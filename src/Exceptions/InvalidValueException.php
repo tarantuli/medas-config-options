@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptions\Exceptions;
 
-use Medas\ConfigOptions\ConfigOption;
 use Medas\Core\Exceptions\BaseException;
+use Medas\ServiceManager\ConfigOptions\ConfigOption;
 
 class InvalidValueException extends BaseException
 {

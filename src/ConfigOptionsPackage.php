@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptions;
 
-use Medas\ConfigManager\ConfigManagerPackage;
 use Medas\ServiceManager\{AsSingleton, BasePackage};
 
 class ConfigOptionsPackage extends BasePackage
@@ -14,7 +13,6 @@ class ConfigOptionsPackage extends BasePackage
     public function dependencies(): array
     {
         return $this->dependenciesByClass([
-            ConfigManagerPackage::class,
         ]);
     }
 

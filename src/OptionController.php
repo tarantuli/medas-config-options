@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Medas\ConfigOptions;
 
 use Medas\ServiceManager\Attributes\Service;
+use Medas\ServiceManager\ConfigOptions\ConfigOption;
 use Medas\ServiceManager\Interfaces\ConfigManager;
-use Medas\ServiceManager\Interfaces\Unserializer;
-use Medas\ServiceManager\Interfaces\Validator;
+use Medas\ServiceManager\Values\Interfaces\{Unserializer, Validator};
 
 #[Service]
 class OptionController
