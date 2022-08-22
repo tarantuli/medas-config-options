@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptions;
 
-use Medas\ConfigOptions\Attributes\ConfigValue;
 use Medas\ConfigOptions\Exceptions\ConfigValueDoesNotImplementOptionException;
 use Medas\ServiceManager\Attributes\Service;
-use Medas\ServiceManager\ConfigOptions\ConfigOption;
+use Medas\ServiceManager\ConfigOptions\{ConfigOption, ConfigValue};
 use Medas\ServiceManager\ParameterResolving\ParameterResolver;
 
 #[Service]
