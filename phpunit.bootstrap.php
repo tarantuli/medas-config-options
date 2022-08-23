@@ -3,12 +3,17 @@
 declare(strict_types=1);
 
 use Medas\ConfigManager\ConfigManagerPackage;
+use Medas\ConfigOptions\ConfigOptionsPackage;
 use Medas\ServiceManager\Interfaces\ConfigManager;
+use Medas\ServiceManager\ServiceManager;
 
-require_once __DIR__ . '/bootstrap.php';
+chdir(__DIR__);
 
-sm()->addPackage(ConfigManagerPackage::instance());
+$sm = ServiceManager::get();
 
-$config = sm()->resolve(ConfigManager::class);
-$config->readEnv(__DIR__ . '/tests/Mockups/', '.env.test');
-$config->addDirectory(__DIR__ . '/tests/MockUps');
+$sm->addPackage(ConfigOptionsPackage::instance());
+$sm->addPackage(ConfigManagerPackage::instance());
+
+sm()->resolve(ConfigManager::class)
+    ->readEnv(__DIR__ . '/tests/Mockups/', '.env.test')
+    ->addDirectory(__DIR__ . '/tests/MockUps');
