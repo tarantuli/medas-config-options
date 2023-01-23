@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptions;
 
-use Medas\ConfigOptions\Exceptions\ConfigValueDoesNotImplementOptionException;
+use Medas\ConfigOptions\Exceptions\ConfigValueDoesNotImplementOption;
 use Medas\ServiceManager\Attributes\Service;
 use Medas\ServiceManager\ConfigOptions\{ConfigOption, ConfigValue};
 use Medas\ServiceManager\ParameterResolving\ParameterResolver;
@@ -24,7 +24,7 @@ class ConfigOptionResolver implements ParameterResolver
         $optionController = service(OptionController::class);
 
         if (!$optionController->hasValue($option)) {
-            return false;
+            throw new Exceptions\NoConfigValueFound($option);
         }
 
         $this->result = $optionController->getValue($option);
@@ -37,14 +37,14 @@ class ConfigOptionResolver implements ParameterResolver
         $configOptionClass = $attribute->newInstance()->configOption;
 
         if (!class_exists($configOptionClass)) {
-            throw new ConfigValueDoesNotImplementOptionException($configOptionClass);
+            throw new ConfigValueDoesNotImplementOption($configOptionClass);
         }
 
         /** @var ConfigOption $configOption */
         $configOption = $configOptionClass::instance();
 
         if (!$configOption instanceof ConfigOption) {
-            throw new ConfigValueDoesNotImplementOptionException($configOptionClass);
+            throw new ConfigValueDoesNotImplementOption($configOptionClass);
         }
 
         return $configOption;

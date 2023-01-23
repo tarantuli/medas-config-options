@@ -40,7 +40,7 @@ class OptionController
 
             if ($option instanceof Validator && !$option->isValid($value)) {
                 /** @noinspection PhpParamsInspection $option is most certainly also a ConfigOption */
-                throw new Exceptions\InvalidValueException($value, $option);
+                throw new Exceptions\ValueDoesNotPassValidator($value, $option);
             }
 
             if ($option instanceof Unserializer) {
@@ -56,7 +56,7 @@ class OptionController
             return $option->default();
         }
 
-        throw new Exceptions\NoConfigValueFoundException($option);
+        throw new Exceptions\NoConfigValueFound($option);
     }
 
     public function getPath(ConfigOption $option): string

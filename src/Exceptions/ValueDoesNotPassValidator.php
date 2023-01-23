@@ -7,7 +7,7 @@ namespace Medas\ConfigOptions\Exceptions;
 use Medas\Core\Exceptions\BaseException;
 use Medas\ServiceManager\ConfigOptions\ConfigOption;
 
-class InvalidValueException extends BaseException
+class ValueDoesNotPassValidator extends BaseException
 {
     public function __construct(string $value, ConfigOption $configOption)
     {
@@ -16,6 +16,6 @@ class InvalidValueException extends BaseException
 
     public function pattern(): string
     {
-        return 'Invalid value "%s" found for config option %s';
+        return 'Invalid value %s found for config option %s';
     }
 }

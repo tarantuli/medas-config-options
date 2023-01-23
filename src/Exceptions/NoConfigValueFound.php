@@ -7,7 +7,7 @@ namespace Medas\ConfigOptions\Exceptions;
 use Medas\Core\Exceptions\BaseException;
 use Medas\ServiceManager\ConfigOptions\ConfigOption;
 
-class NoConfigValueFoundException extends BaseException
+class NoConfigValueFound extends BaseException
 {
     public function __construct(ConfigOption $configOption)
     {

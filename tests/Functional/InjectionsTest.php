@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptionsTest\Functional;
 
-use Medas\ConfigOptions\Exceptions\ConfigValueDoesNotImplementOptionException;
+use Medas\ConfigOptions\Exceptions\ConfigValueDoesNotImplementOption;
 use Medas\ConfigOptionsTest\MockUps\MockServiceWithConfigInjection;
 use Medas\ConfigOptionsTest\MockUps\MockServiceWithInvalidConfigInjection;
 use Medas\ConfigOptionsTest\MockUps\MockPackage;
@@ -27,7 +27,7 @@ class InjectionsTest extends TestCase
     {
         $manager = $this->loadMockUps();
 
-        $this->expectException(ConfigValueDoesNotImplementOptionException::class);
+        $this->expectException(ConfigValueDoesNotImplementOption::class);
         $manager->resolve(MockServiceWithInvalidConfigInjection::class);
     }
 

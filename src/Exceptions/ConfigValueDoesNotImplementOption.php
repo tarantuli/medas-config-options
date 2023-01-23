@@ -6,7 +6,7 @@ namespace Medas\ConfigOptions\Exceptions;
 
 use Medas\Core\Exceptions\BaseException;
 
-class ConfigValueDoesNotImplementOptionException extends BaseException
+class ConfigValueDoesNotImplementOption extends BaseException
 {
     public function __construct(string $configValue)
     {
