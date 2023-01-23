@@ -24,6 +24,10 @@ class ConfigOptionResolver implements ParameterResolver
         $optionController = service(OptionController::class);
 
         if (!$optionController->hasValue($option)) {
+            // We throw an exception, because it should be expected that,
+            // if the ConfigValue attribute is used, that the value actually
+            // be defined in the defaults or the config, instead of
+            // skipping to the next ParameterResolver
             throw new Exceptions\NoConfigValueFound($option);
         }
 
