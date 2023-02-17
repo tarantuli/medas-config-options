@@ -5,9 +5,7 @@ declare(strict_types=1);
 use Medas\ConfigManager\ConfigManagerPackage;
 use Medas\ConfigOptions\ConfigOptionsPackage;
 use Medas\ConfigOptionsTest\MockUps\MockPackage;
-use Medas\ServiceManager\Interfaces\ConfigManager;
-use Medas\ServiceManager\ServiceConfig;
-use Medas\ServiceManager\ServiceManager;
+use Medas\ServiceManager\{Interfaces\ConfigManager, ServiceConfig, ServiceManager};
 
 chdir(__DIR__);
 
