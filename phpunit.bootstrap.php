@@ -4,16 +4,24 @@ declare(strict_types=1);
 
 use Medas\ConfigManager\ConfigManagerPackage;
 use Medas\ConfigOptions\ConfigOptionsPackage;
+use Medas\ConfigOptionsTest\MockUps\MockPackage;
 use Medas\ServiceManager\Interfaces\ConfigManager;
+use Medas\ServiceManager\ServiceConfig;
 use Medas\ServiceManager\ServiceManager;
 
 chdir(__DIR__);
 
-$sm = ServiceManager::get();
+new ServiceManager(function (): ServiceConfig {
+    $config = new ServiceConfig();
+    $config->addPackages([
+        ConfigOptionsPackage::instance(),
+        ConfigManagerPackage::instance(),
+        MockPackage::instance(),
+    ]);
 
-$sm->addPackage(ConfigOptionsPackage::instance());
-$sm->addPackage(ConfigManagerPackage::instance());
+    return $config;
+});
 
-sm()->resolve(ConfigManager::class)
+service(ConfigManager::class)
     ->readEnv(__DIR__ . '/tests/Mockups/', '.env.test')
     ->addDirectory(__DIR__ . '/tests/MockUps');

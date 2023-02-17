@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptions;
 
-use Medas\ServiceManager\{AsSingleton, BasePackage};
+use Medas\ServiceManager\{AsSingleton, BasePackage, ServiceConfig};
 
 class ConfigOptionsPackage extends BasePackage
 {
@@ -21,11 +21,11 @@ class ConfigOptionsPackage extends BasePackage
         return __DIR__;
     }
 
-    public function initialize(): void
+    public function initialize(ServiceConfig $config): void
     {
-        sm()->config()->addParameterResolver(new ConfigOptionResolver());
+        $config->addParameterResolver(new ConfigOptionResolver());
         require_once __DIR__ . '/GlobalFunctions.php';
 
-        parent::initialize();
+        parent::initialize($config);
     }
 }

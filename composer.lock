@@ -105,12 +105,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:tarantuli/medas-service-manager.git",
-                "reference": "5ada1745c8ddcac15e971884f5e7f8515407256e"
+                "reference": "ace41d072124c1a7ace60153d3835ad99c7ed202"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantuli/medas-service-manager/zipball/5ada1745c8ddcac15e971884f5e7f8515407256e",
-                "reference": "5ada1745c8ddcac15e971884f5e7f8515407256e",
+                "url": "https://api.github.com/repos/tarantuli/medas-service-manager/zipball/ace41d072124c1a7ace60153d3835ad99c7ed202",
+                "reference": "ace41d072124c1a7ace60153d3835ad99c7ed202",
                 "shasum": ""
             },
             "require": {
@@ -144,7 +144,7 @@
                 "source": "https://github.com/tarantuli/medas-service-manager/tree/dev",
                 "issues": "https://github.com/tarantuli/medas-service-manager/issues"
             },
-            "time": "2023-02-17T10:04:57+00:00"
+            "time": "2023-02-17T10:41:18+00:00"
         }
     ],
     "packages-dev": [
@@ -286,12 +286,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:tarantuli/medas-config-manager.git",
-                "reference": "cf490a76c69223ecb9a2a43d55c2a6d2c479f38f"
+                "reference": "3d31f2427d05b0569b671314d41646d7b8ab1895"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantuli/medas-config-manager/zipball/cf490a76c69223ecb9a2a43d55c2a6d2c479f38f",
-                "reference": "cf490a76c69223ecb9a2a43d55c2a6d2c479f38f",
+                "url": "https://api.github.com/repos/tarantuli/medas-config-manager/zipball/3d31f2427d05b0569b671314d41646d7b8ab1895",
+                "reference": "3d31f2427d05b0569b671314d41646d7b8ab1895",
                 "shasum": ""
             },
             "require": {
@@ -321,7 +321,7 @@
                 "source": "https://github.com/tarantuli/medas-config-manager/tree/dev",
                 "issues": "https://github.com/tarantuli/medas-config-manager/issues"
             },
-            "time": "2022-10-12T14:39:40+00:00"
+            "time": "2023-02-17T10:53:19+00:00"
         },
         {
             "name": "myclabs/deep-copy",

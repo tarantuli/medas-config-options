@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Medas\ConfigOptionsTest\Functional;
 
 use Medas\ConfigOptions\Exceptions\ConfigValueDoesNotImplementOption;
-use Medas\ConfigOptionsTest\MockUps\MockServiceWithConfigInjection;
-use Medas\ConfigOptionsTest\MockUps\MockServiceWithInvalidConfigInjection;
-use Medas\ConfigOptionsTest\MockUps\MockPackage;
+use Medas\ConfigOptionsTest\MockUps\{MockServiceWithConfigInjection, MockServiceWithInvalidConfigInjection};
 use Medas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
 
@@ -15,9 +13,8 @@ class InjectionsTest extends TestCase
 {
     public function testServiceWithConfigInjection(): void
     {
-        $manager = $this->loadMockUps();
+        $manager = ServiceManager::get();
 
-        /** @var $service MockServiceWithConfigInjection */
         $service = $manager->resolve(MockServiceWithConfigInjection::class);
 
         $this->assertEquals('service-manager', $service->getProject());
@@ -25,17 +22,9 @@ class InjectionsTest extends TestCase
 
     public function testServiceWithInvalidConfigInjection(): void
     {
-        $manager = $this->loadMockUps();
+        $manager = ServiceManager::get();
 
         $this->expectException(ConfigValueDoesNotImplementOption::class);
         $manager->resolve(MockServiceWithInvalidConfigInjection::class);
-    }
-
-    protected function loadMockUps(): ServiceManager
-    {
-        $manager = ServiceManager::get();
-        $manager->addPackage(MockPackage::instance());
-
-        return $manager;
     }
 }
