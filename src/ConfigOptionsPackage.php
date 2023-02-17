@@ -23,7 +23,7 @@ class ConfigOptionsPackage extends BasePackage
 
     public function initialize(): void
     {
-        sm()->addParameterResolver(new ConfigOptionResolver());
+        sm()->config()->addParameterResolver(new ConfigOptionResolver());
         require_once __DIR__ . '/GlobalFunctions.php';
 
         parent::initialize();

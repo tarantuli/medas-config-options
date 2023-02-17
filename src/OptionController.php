@@ -15,7 +15,7 @@ class OptionController
     private \SplObjectStorage $values;
 
     public function __construct(
-        private ConfigManager $configManager,
+        private readonly ConfigManager $configManager,
     )
     {
         $this->values = new \SplObjectStorage();
