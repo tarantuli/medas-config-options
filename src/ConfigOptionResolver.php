@@ -14,6 +14,11 @@ class ConfigOptionResolver implements ParameterResolver
 {
     private mixed $result;
 
+    public function priority(): int
+    {
+        return -100;
+    }
+
     public function handle(\ReflectionParameter|\ReflectionProperty $parameter): bool
     {
         if (!$attributes = $parameter->getAttributes(ConfigValue::class)) {
@@ -56,10 +61,5 @@ class ConfigOptionResolver implements ParameterResolver
     public function result(): mixed
     {
         return $this->result;
-    }
-
-    public function priority(): int
-    {
-        return -100;
     }
 }
