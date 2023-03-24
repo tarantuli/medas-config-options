@@ -6,8 +6,7 @@ namespace Medas\ConfigOptions;
 
 use Medas\ServiceManager\Attributes\Service;
 use Medas\ServiceManager\ConfigOptions\ConfigOption;
-use Medas\ServiceManager\Interfaces\ConfigManager;
-use Medas\ServiceManager\Values\Interfaces\{Unserializer, Validator};
+use Medas\ServiceManager\Interfaces\{ConfigManager, Serializer, Validator};
 
 #[Service]
 class OptionController
@@ -19,12 +18,6 @@ class OptionController
     )
     {
         $this->values = new \SplObjectStorage();
-    }
-
-    public function hasValue(ConfigOption $option): bool
-    {
-        return $option->hasDefault()
-            || $this->configManager->hasValue($this->getPath($option));
     }
 
     public function getValue(ConfigOption $option): mixed
@@ -43,7 +36,7 @@ class OptionController
                 throw new Exceptions\ValueDoesNotPassValidator($value, $option);
             }
 
-            if ($option instanceof Unserializer) {
+            if ($option instanceof Serializer) {
                 $value = $option->unserialize($value);
             }
 
@@ -69,5 +62,11 @@ class OptionController
         } while ($group = $group->parent());
 
         return $path;
+    }
+
+    public function hasValue(ConfigOption $option): bool
+    {
+        return $option->hasDefault()
+            || $this->configManager->hasValue($this->getPath($option));
     }
 }
