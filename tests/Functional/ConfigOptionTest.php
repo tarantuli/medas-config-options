@@ -6,7 +6,7 @@ namespace Medas\ConfigOptionsTest\Functional;
 
 use Medas\ConfigOptions\OptionController;
 use Medas\ConfigOptionsTest\MockUps\MockConfigOption;
-use Medas\ServiceManager\Interfaces\ConfigManager;
+use Medas\Core\Interfaces\ConfigManager;
 use PHPUnit\Framework\TestCase;
 
 class ConfigOptionTest extends TestCase

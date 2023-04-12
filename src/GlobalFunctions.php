@@ -5,7 +5,7 @@ declare(strict_types=1);
 // This file should be in the global namespace
 
 use Medas\ConfigOptions\OptionController;
-use Medas\ServiceManager\ConfigOptions\ConfigOption;
+use Medas\Core\Interfaces\ConfigOption;
 
 function option(ConfigOption $option): mixed
 {
