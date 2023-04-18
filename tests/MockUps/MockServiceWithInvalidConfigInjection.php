@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptionsTest\MockUps;
 
-use Medas\Core\Attributes\ConfigValue;
-use Medas\ServiceManager\Service;
+use Medas\Core\Attributes\{ConfigValue, Service};
 
 #[Service]
 class MockServiceWithInvalidConfigInjection

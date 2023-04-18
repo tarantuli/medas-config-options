@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Medas\ConfigOptions;
 
 use Medas\ConfigOptions\Exceptions\ConfigValueDoesNotImplementOption;
-use Medas\Core\Attributes\ConfigValue;
+use Medas\Core\Attributes\{ConfigValue, Service};
 use Medas\Core\Interfaces\ConfigOption;
 use Medas\ServiceManager\ParameterResolving\ParameterResolver;
-use Medas\ServiceManager\Service;
 
 #[Service]
 class ConfigOptionResolver implements ParameterResolver

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptions;
 
+use Medas\Core\Attributes\Service;
 use Medas\Core\Interfaces\{ConfigManager, ConfigOption, Serializer, Validator};
-use Medas\ServiceManager\Service;
 
 #[Service]
 class OptionController
