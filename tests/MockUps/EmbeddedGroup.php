@@ -8,15 +8,21 @@ use Medas\Core\Attributes\Service;
 use Medas\Core\Interfaces\ConfigGroup;
 
 #[Service]
-class MockConfigGroup implements ConfigGroup
+class EmbeddedGroup implements ConfigGroup
 {
+    public function __construct(
+        private readonly MockConfigGroup $parent,
+    )
+    {
+    }
+
     public function parent(): ConfigGroup|null
     {
-        return null;
+        return $this->parent;
     }
 
     public function name(): string
     {
-        return 'mock-group';
+        return 'embedded-group';
     }
 }

@@ -42,14 +42,15 @@ class ConfigOptionResolver implements ParameterResolver
 
     private function getConfigOption(\ReflectionAttribute $attribute): ConfigOption
     {
-        $configOptionClass = $attribute->newInstance()->configOption;
+        /** @var ConfigValue $configValue */
+        $configValue = $attribute->newInstance();
+        $configOptionClass = $configValue->configOption;
 
         if (!class_exists($configOptionClass)) {
             throw new ConfigValueDoesNotImplementOption($configOptionClass);
         }
 
-        /** @var ConfigOption $configOption */
-        $configOption = $configOptionClass::instance();
+        $configOption = service($configOptionClass);
 
         if (!$configOption instanceof ConfigOption) {
             throw new ConfigValueDoesNotImplementOption($configOptionClass);

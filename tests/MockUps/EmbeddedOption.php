@@ -8,10 +8,10 @@ use Medas\Core\Attributes\Service;
 use Medas\Core\Interfaces\{ConfigGroup, ConfigOption};
 
 #[Service]
-class MockConfigOption implements ConfigOption
+class EmbeddedOption implements ConfigOption
 {
     public function __construct(
-        private readonly MockConfigGroup $group,
+        private readonly EmbeddedGroup $group,
     )
     {
     }
@@ -23,26 +23,21 @@ class MockConfigOption implements ConfigOption
 
     public function name(): string
     {
-        return 'project';
+        return 'embedded-option';
     }
 
     public function description(): string
     {
-        return 'The project';
-    }
-
-    public function isValid(mixed $value): bool
-    {
-        return is_string($value);
+        return 'An embedded option';
     }
 
     public function hasDefault(): bool
     {
-        return false;
+        return true;
     }
 
-    public function default(): mixed
+    public function default(): array
     {
-        return null;
+        return ['á', 'í'];
     }
 }

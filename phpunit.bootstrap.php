@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Medas\ConfigManager\ConfigManagerPackage;
 use Medas\ConfigOptions\ConfigOptionsPackage;
 use Medas\ConfigOptionsTest\MockUps\MockPackage;
+use Medas\ConsolePrinter\ConsolePrinterPackage;
 use Medas\Core\Interfaces\ConfigManager;
 use Medas\ServiceManager\{ServiceConfig, ServiceManager};
 
@@ -15,6 +16,7 @@ new ServiceManager(function (): ServiceConfig {
     $config->addPackages([
         ConfigOptionsPackage::instance(),
         ConfigManagerPackage::instance(),
+        ConsolePrinterPackage::instance(),
         MockPackage::instance(),
     ]);
 

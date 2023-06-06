@@ -13,7 +13,7 @@ class ConfigOptionTest extends TestCase
 {
     public function testOptionPath(): void
     {
-        $option = MockConfigOption::instance();
+        $option = service(MockConfigOption::class);
         $controller = service(OptionController::class);
         $manager = service(ConfigManager::class);
 
@@ -24,7 +24,7 @@ class ConfigOptionTest extends TestCase
 
     public function testOptionValidator(): void
     {
-        $option = MockConfigOption::instance();
+        $option = service(MockConfigOption::class);
 
         self::assertNotTrue($option->isValid(false));
         self::assertTrue($option->isValid('string'));
