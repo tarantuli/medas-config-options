@@ -51,7 +51,10 @@ class ListOptions extends BaseConsoleCommand
     private function processGroup(int $depth, ConfigGroup $group, OptionCollection $collection): void
     {
         $this->printer
-            ->printLine(Text::create(str_repeat('  ', $depth) . $group->name() . ':'));
+            ->printLine(Text::create(
+                str_repeat('  ', $depth) . $group->name() . ':',
+                Color::LightYellow
+            ));
 
         foreach ($collection->options[$group::class] ?? [] as $option) {
             $this->handleDescriptionAndDefault($depth, $option);
