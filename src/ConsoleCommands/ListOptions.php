@@ -54,43 +54,54 @@ class ListOptions extends BaseConsoleCommand
             ->printLine(Text::create(str_repeat('  ', $depth) . $group->name() . ':'));
 
         foreach ($collection->options[$group::class] ?? [] as $option) {
-            $texts[] = Text::create(str_repeat('  ', $depth + 1)
-                . '# ' . $option->description()
-            );
+            $this->handleDescriptionAndDefault($depth, $option);
 
-            if ($option->hasDefault()) {
-                $defaultAsString = CaseInsensitiveString::fromVariable($option->default(), true, true);
-                $texts[] = Text::create(', default: ');
-                $texts[] = Text::create((string) $defaultAsString, Color::Blue);
-            }
+            $this->handleNameAndValue($depth, $option);
 
-            $this->printer->printLine(... $texts);
-
-            $texts = [];
-
-            $texts[] = Text::create(str_repeat('  ', $depth + 1)
-                . $option->name()
-                . ': '
-            );
-
-            try {
-                $value = $this->optionController->getValue($option);
-                $valueAsString = CaseInsensitiveString::fromVariable($value, false, true);
-
-                $texts[] = Text::create((string) $valueAsString);
-            }
-            catch (NoConfigValueFound) {
-                $texts[] = Text::create('no value found', Color::LightRed);
-            }
-
-            $this->printer->printLine(... $texts);
-
-            $this->printer
-                ->printEol();
+            $this->printer->printEol();
         }
 
         foreach ($collection->groups[$group::class] ?? [] as $childGroup) {
             $this->processGroup($depth + 1, $childGroup, $collection);
         }
+    }
+
+    private function handleDescriptionAndDefault(int $depth, mixed $option): void
+    {
+        $texts[] = Text::create(
+            str_repeat('  ', $depth + 1)
+            . '# ' . $option->description()
+        );
+
+        if ($option->hasDefault()) {
+            $defaultAsString = CaseInsensitiveString::fromVariable($option->default(), true, true);
+            $texts[] = Text::create(', default: ');
+            $texts[] = Text::create((string) $defaultAsString, Color::Blue);
+        }
+
+        $this->printer->printLine(... $texts);
+    }
+
+    private function handleNameAndValue(int $depth, mixed $option): void
+    {
+        $texts = [];
+
+        $texts[] = Text::create(
+            str_repeat('  ', $depth + 1)
+            . $option->name()
+            . ': '
+        );
+
+        try {
+            $value = $this->optionController->getValue($option);
+            $valueAsString = CaseInsensitiveString::fromVariable($value, false, true);
+
+            $texts[] = Text::create((string) $valueAsString);
+        }
+        catch (NoConfigValueFound) {
+            $texts[] = Text::create('no value found', Color::LightRed);
+        }
+
+        $this->printer->printLine(... $texts);
     }
 }
