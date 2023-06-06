@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Medas\ConfigOptions\ConsoleCommands;
 
 use Medas\ConfigOptions\Collection\{Collector, OptionCollection};
+use Medas\ConfigOptions\Exceptions\NoConfigValueFound;
 use Medas\ConfigOptions\OptionController;
 use Medas\Console\{Commands\BaseConsoleCommand, Commands\ConsoleCommandGroup, Formats\Color, Printer, Text};
 use Medas\Core\Attributes\Service;
@@ -67,13 +68,20 @@ class ListOptions extends BaseConsoleCommand
 
             $texts = [];
 
-            $valueAsString = CaseInsensitiveString::fromVariable($this->optionController->getValue($option), false, true);
-
             $texts[] = Text::create(str_repeat('  ', $depth + 1)
                 . $option->name()
                 . ': '
-                . $valueAsString
             );
+
+            try {
+                $value = $this->optionController->getValue($option);
+                $valueAsString = CaseInsensitiveString::fromVariable($value, false, true);
+
+                $texts[] = Text::create((string) $valueAsString);
+            }
+            catch (NoConfigValueFound) {
+                $texts[] = Text::create('no value found', Color::LightRed);
+            }
 
             $this->printer->printLine(... $texts);
 
