@@ -70,12 +70,13 @@ class ListOptions extends BaseConsoleCommand
     {
         $texts[] = Text::create(
             str_repeat('  ', $depth + 1)
-            . '# ' . $option->description()
+            . '# ' . $option->description(),
+            Color::LightGray
         );
 
         if ($option->hasDefault()) {
             $defaultAsString = CaseInsensitiveString::fromVariable($option->default(), true, true);
-            $texts[] = Text::create(', default: ');
+            $texts[] = Text::create(', default: ', Color::LightGray);
             $texts[] = Text::create((string) $defaultAsString, Color::Blue);
         }
 
