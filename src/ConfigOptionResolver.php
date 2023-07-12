@@ -6,8 +6,7 @@ namespace Medas\ConfigOptions;
 
 use Medas\ConfigOptions\Exceptions\ConfigValueDoesNotImplementOption;
 use Medas\Core\Attributes\{ConfigValue, Service};
-use Medas\Core\Interfaces\ConfigOption;
-use Medas\ObjectInstantiator\ParameterResolving\ParameterResolver;
+use Medas\Core\Interfaces\{ConfigOption, ParameterResolver};
 
 #[Service]
 class ConfigOptionResolver implements ParameterResolver

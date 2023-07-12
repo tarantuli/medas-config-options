@@ -6,9 +6,9 @@ namespace Medas\ConfigOptionsTest\Functional;
 
 use Medas\ConfigOptions\Collection\Collector;
 use Medas\ConfigOptionsTest\MockUps\MockConfigGroup;
-use Medas\CoreTest\BaseTest;
+use PHPUnit\Framework\TestCase;
 
-class CollectorTest extends BaseTest
+class CollectorTest extends TestCase
 {
     public function testCollector(): void
     {
