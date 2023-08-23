@@ -9,7 +9,7 @@ use Medas\Core\Interfaces\ConfigGroup;
 use Medas\Core\Interfaces\ConfigOption;
 
 #[Service]
-class OptionWithoutDefault implements ConfigOption
+readonly class OptionWithoutDefault implements ConfigOption
 {
     public function __construct(
         private readonly EmbeddedGroup $group,

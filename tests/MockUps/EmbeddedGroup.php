@@ -8,7 +8,7 @@ use Medas\Core\Attributes\Service;
 use Medas\Core\Interfaces\ConfigGroup;
 
 #[Service]
-class EmbeddedGroup implements ConfigGroup
+readonly class EmbeddedGroup implements ConfigGroup
 {
     public function __construct(
         private readonly MockConfigGroup $parent,

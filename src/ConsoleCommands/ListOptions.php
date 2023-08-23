@@ -13,13 +13,13 @@ use Medas\Core\CaseInsensitiveString;
 use Medas\Core\Interfaces\ConfigGroup;
 
 #[Service]
-class ListOptions extends BaseConsoleCommand
+readonly class ListOptions extends BaseConsoleCommand
 {
     public function __construct(
-        private readonly Collector        $collector,
-        private readonly Group            $group,
-        private readonly OptionController $optionController,
-        private readonly Printer          $printer,
+        private Collector        $collector,
+        private Group            $group,
+        private OptionController $optionController,
+        private Printer          $printer,
     )
     {
     }

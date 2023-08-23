@@ -8,12 +8,12 @@ use Medas\Core\Attributes\Service;
 use Medas\Core\Interfaces\{ConfigManager, ConfigOption, Serializer, Validator};
 
 #[Service]
-class OptionController
+readonly class OptionController
 {
     private \SplObjectStorage $values;
 
     public function __construct(
-        private readonly ConfigManager $configManager,
+        private ConfigManager $configManager,
     )
     {
         $this->values = new \SplObjectStorage();

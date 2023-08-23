@@ -8,7 +8,7 @@ use Medas\Core\Attributes\Service;
 use Medas\Core\Interfaces\{ConfigGroup, ConfigOption, ImplementorFinder};
 
 #[Service]
-class Collector
+readonly class Collector
 {
     public function collect(): OptionCollection
     {

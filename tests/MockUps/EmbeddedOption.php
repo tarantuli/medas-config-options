@@ -8,7 +8,7 @@ use Medas\Core\Attributes\Service;
 use Medas\Core\Interfaces\{ConfigGroup, ConfigOption};
 
 #[Service]
-class EmbeddedOption implements ConfigOption
+readonly class EmbeddedOption implements ConfigOption
 {
     public function __construct(
         private readonly EmbeddedGroup $group,

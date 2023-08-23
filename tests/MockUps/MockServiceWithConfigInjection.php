@@ -7,7 +7,7 @@ namespace Medas\ConfigOptionsTest\MockUps;
 use Medas\Core\Attributes\{ConfigValue, Service};
 
 #[Service]
-class MockServiceWithConfigInjection
+readonly class MockServiceWithConfigInjection
 {
     public function __construct(
         #[ConfigValue(MockConfigOption::class)] private string $project,

@@ -8,7 +8,7 @@ use Medas\Core\Attributes\Service;
 use Medas\Core\Interfaces\ConfigGroup;
 
 #[Service]
-class MockConfigGroup implements ConfigGroup
+readonly class MockConfigGroup implements ConfigGroup
 {
     public function parent(): ConfigGroup|null
     {

@@ -8,7 +8,7 @@ use Medas\Core\Attributes\Service;
 use Medas\Core\Interfaces\{ConfigGroup, ConfigOption};
 
 #[Service]
-class MockConfigOption implements ConfigOption
+readonly class MockConfigOption implements ConfigOption
 {
     public function __construct(
         private readonly MockConfigGroup $group,
