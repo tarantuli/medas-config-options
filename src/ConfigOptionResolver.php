@@ -7,21 +7,20 @@ namespace Medas\ConfigOptions;
 use Medas\ConfigOptions\Exceptions\ConfigValueDoesNotImplementOption;
 use Medas\Core\Attributes\{ConfigValue, Service};
 use Medas\Core\Interfaces\{ConfigOption, ParameterResolver};
+use Medas\Core\ParameterResolverResult;
 
 #[Service]
 class ConfigOptionResolver implements ParameterResolver
 {
-    private mixed $result;
-
     public function priority(): int
     {
         return -100;
     }
 
-    public function handle(\ReflectionParameter|\ReflectionProperty $parameter): bool
+    public function handle(\ReflectionParameter|\ReflectionProperty $parameter): ParameterResolverResult
     {
         if (!$attributes = $parameter->getAttributes(ConfigValue::class)) {
-            return false;
+            return new ParameterResolverResult(false);
         }
 
         $option = $this->getConfigOption($attributes[0]);
@@ -31,12 +30,10 @@ class ConfigOptionResolver implements ParameterResolver
             // We don't throw an exception, because the parameter
             // could be nullable, which means an unset config value
             // is allowed
-            return false;
+            return new ParameterResolverResult(false);
         }
 
-        $this->result = $optionController->getValue($option);
-
-        return true;
+        return new ParameterResolverResult(true, $optionController->getValue($option));
     }
 
     private function getConfigOption(\ReflectionAttribute $attribute): ConfigOption
@@ -56,10 +53,5 @@ class ConfigOptionResolver implements ParameterResolver
         }
 
         return $configOption;
-    }
-
-    public function result(): mixed
-    {
-        return $this->result;
     }
 }
