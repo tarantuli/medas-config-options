@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptions\Collection;
 
-use Medas\Core\Attributes\Service;
-use Medas\Core\Interfaces\{ConfigGroup, ConfigOption, ImplementorFinder};
+use Medas\Core\{Attributes\Service, Interfaces\ConfigGroup, Interfaces\ConfigOption, Interfaces\ImplementorFinder};
 
 #[Service]
 readonly class Collector
@@ -26,6 +25,7 @@ readonly class Collector
 
         foreach ($configGroups as $configGroup) {
             $parent = $configGroup->parent() ? $configGroup->parent()::class : 0;
+
             if (!array_key_exists($parent, $groups)) {
                 $groups[$parent] = [];
             }
@@ -44,6 +44,7 @@ readonly class Collector
 
         foreach ($configOptions as $configOption) {
             $group = $configOption->group()::class;
+
             if (!array_key_exists($group, $options)) {
                 $options[$group] = [];
             }

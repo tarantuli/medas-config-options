@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptions;
 
-use Medas\Core\Attributes\Service;
-use Medas\Core\Interfaces\{ConfigManager, ConfigOption, Serializer, Validator};
+use Medas\Core\{
+    Attributes\Service,
+    Interfaces\ConfigManager,
+    Interfaces\ConfigOption,
+    Interfaces\Serializer,
+    Interfaces\Validator
+};
 
 #[Service]
 readonly class OptionController
@@ -40,11 +45,12 @@ readonly class OptionController
             }
 
             $this->values->attach($option, $value);
+
             return $value;
         }
-
         elseif ($option->hasDefault()) {
             $this->values->attach($option, $option->default());
+
             return $option->default();
         }
 
@@ -65,7 +71,6 @@ readonly class OptionController
 
     public function hasValue(ConfigOption $option): bool
     {
-        return $option->hasDefault()
-            || $this->configManager->hasValue($this->getPath($option));
+        return $option->hasDefault() || $this->configManager->hasValue($this->getPath($option));
     }
 }

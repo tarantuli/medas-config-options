@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptions;
 
-use Medas\ConfigOptions\Exceptions\ConfigValueDoesNotImplementOption;
-use Medas\Core\Attributes\{ConfigValue, Service};
-use Medas\Core\Interfaces\{ConfigOption, ParameterResolver};
-use Medas\Core\ParameterResolverResult;
+use Medas\Core\{
+    Attributes\ConfigValue,
+    Attributes\Service,
+    Interfaces\ConfigOption,
+    Interfaces\ParameterResolver,
+    ParameterResolverResult
+};
 
 #[Service]
 class ConfigOptionResolver implements ParameterResolver
@@ -43,13 +46,13 @@ class ConfigOptionResolver implements ParameterResolver
         $configOptionClass = $configValue->configOption;
 
         if (!class_exists($configOptionClass)) {
-            throw new ConfigValueDoesNotImplementOption($configOptionClass);
+            throw new Exceptions\ConfigValueDoesNotImplementOption($configOptionClass);
         }
 
         $configOption = service($configOptionClass);
 
         if (!$configOption instanceof ConfigOption) {
-            throw new ConfigValueDoesNotImplementOption($configOptionClass);
+            throw new Exceptions\ConfigValueDoesNotImplementOption($configOptionClass);
         }
 
         return $configOption;

@@ -24,6 +24,7 @@ class ConfigOptionsPackage extends BasePackage
     public function initialize(ServiceConfig $config): void
     {
         $config->addParameterResolver(new ConfigOptionResolver());
+
         require_once __DIR__ . '/GlobalFunctions.php';
 
         parent::initialize($config);

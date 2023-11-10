@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptions\ConsoleCommands;
 
-use Medas\ConfigOptions\Collection\{Collector, OptionCollection};
-use Medas\ConfigOptions\Exceptions\NoConfigValueFound;
-use Medas\ConfigOptions\OptionController;
+use Medas\ConfigOptions\{
+    Collection\Collector,
+    Collection\OptionCollection,
+    Exceptions\NoConfigValueFound,
+    OptionController
+};
 use Medas\Console\{Commands\BaseConsoleCommand, Commands\ConsoleCommandGroup, Formats\Color, Printer, Text};
-use Medas\Core\Attributes\Service;
-use Medas\Core\CaseInsensitiveString;
-use Medas\Core\Interfaces\ConfigGroup;
+use Medas\Core\{Attributes\Service, CaseInsensitiveString, Interfaces\ConfigGroup};
 
 #[Service]
 readonly class ListOptions extends BaseConsoleCommand
@@ -51,16 +52,11 @@ readonly class ListOptions extends BaseConsoleCommand
     private function processGroup(int $depth, ConfigGroup $group, OptionCollection $collection): void
     {
         $this->printer
-            ->printLine(Text::create(
-                str_repeat('  ', $depth) . $group->name() . ':',
-                Color::LightYellow
-            ));
+            ->printLine(Text::create(str_repeat('  ', $depth) . $group->name() . ':', Color::LightYellow));
 
         foreach ($collection->options[$group::class] ?? [] as $option) {
             $this->handleDescriptionAndDefault($depth, $option);
-
             $this->handleNameAndValue($depth, $option);
-
             $this->printer->printEol();
         }
 
@@ -71,11 +67,7 @@ readonly class ListOptions extends BaseConsoleCommand
 
     private function handleDescriptionAndDefault(int $depth, mixed $option): void
     {
-        $texts[] = Text::create(
-            str_repeat('  ', $depth + 1)
-            . '# ' . $option->description(),
-            Color::LightGray
-        );
+        $texts[] = Text::create(str_repeat('  ', $depth + 1) . '# ' . $option->description(), Color::LightGray);
 
         if ($option->hasDefault()) {
             $defaultAsString = CaseInsensitiveString::fromVariable($option->default(), true, true);
@@ -83,29 +75,23 @@ readonly class ListOptions extends BaseConsoleCommand
             $texts[] = Text::create((string) $defaultAsString, Color::Blue);
         }
 
-        $this->printer->printLine(... $texts);
+        $this->printer->printLine(...$texts);
     }
 
     private function handleNameAndValue(int $depth, mixed $option): void
     {
         $texts = [];
-
-        $texts[] = Text::create(
-            str_repeat('  ', $depth + 1)
-            . $option->name()
-            . ': '
-        );
+        $texts[] = Text::create(str_repeat('  ', $depth + 1) . $option->name() . ': ');
 
         try {
             $value = $this->optionController->getValue($option);
             $valueAsString = CaseInsensitiveString::fromVariable($value, false, true);
-
             $texts[] = Text::create((string) $valueAsString);
         }
         catch (NoConfigValueFound) {
             $texts[] = Text::create('no value found', Color::LightRed);
         }
 
-        $this->printer->printLine(... $texts);
+        $this->printer->printLine(...$texts);
     }
 }

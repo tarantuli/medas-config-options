@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptions\Exceptions;
 
-use Medas\Core\Exceptions\BaseException;
-use Medas\Core\Interfaces\ConfigOption;
+use Medas\Core\{Exceptions\BaseException, Interfaces\ConfigOption};
 
 class ValueDoesNotPassValidator extends BaseException
 {
