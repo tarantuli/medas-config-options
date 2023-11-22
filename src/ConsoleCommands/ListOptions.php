@@ -10,7 +10,13 @@ use Medas\ConfigOptions\{
     Exceptions\NoConfigValueFound,
     OptionController
 };
-use Medas\Console\{Commands\BaseConsoleCommand, Commands\ConsoleCommandGroup, Formats\Color, Printer, Text};
+use Medas\Console\{
+    Commands\BaseConsoleCommand,
+    Commands\ConsoleCommandGroup,
+    Formats\Color,
+    Printer,
+    Text
+};
 use Medas\Core\{Attributes\Service, CaseInsensitiveString, Interfaces\ConfigGroup};
 
 #[Service]
@@ -67,7 +73,10 @@ readonly class ListOptions extends BaseConsoleCommand
 
     private function handleDescriptionAndDefault(int $depth, mixed $option): void
     {
-        $texts[] = Text::create(str_repeat('  ', $depth + 1) . '# ' . $option->description(), Color::LightGray);
+        $texts[] = Text::create(
+            str_repeat('  ', $depth + 1) . '# ' . $option->description(),
+            Color::LightGray
+        );
 
         if ($option->hasDefault()) {
             $defaultAsString = CaseInsensitiveString::fromVariable($option->default(), true, true);

@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptions\Collection;
 
-use Medas\Core\{Attributes\Service, Interfaces\ConfigGroup, Interfaces\ConfigOption, Interfaces\ImplementorFinder};
+use Medas\Core\{
+    Attributes\Service,
+    Interfaces\ConfigGroup,
+    Interfaces\ConfigOption,
+    Interfaces\ImplementorFinder
+};
 
 #[Service]
 readonly class Collector
