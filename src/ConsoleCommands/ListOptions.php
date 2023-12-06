@@ -43,7 +43,7 @@ readonly class ListOptions extends BaseConsoleCommand
 
     public function description(): string
     {
-        return 'List all options and default values';
+        return 'Lists all options and default values';
     }
 
     public function process(array $arguments): void
