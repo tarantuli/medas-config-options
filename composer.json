@@ -1,6 +1,9 @@
 {
     "name": "morphp/medas-config-options",
     "description": "Medas config options",
+    "keywords": [
+        "configuration"
+    ],
     "authors": [
         {
             "name": "Patrick Morpey",
