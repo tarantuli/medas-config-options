@@ -8,7 +8,7 @@ use Medas\Core\{Exceptions\BaseException, Interfaces\ConfigOption};
 
 class ValueDoesNotPassValidator extends BaseException
 {
-    public function __construct(string $value, ConfigOption $configOption)
+    public function __construct(mixed $value, ConfigOption $configOption)
     {
         parent::__construct($value, $configOption::class);
     }
