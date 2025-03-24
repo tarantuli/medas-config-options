@@ -8,12 +8,13 @@ use Medas\Core\{
     Attributes\Service,
     Interfaces\ConfigManager,
     Interfaces\ConfigOption,
+    Interfaces\ConfigOptionController,
     Interfaces\Serializer,
     Interfaces\Validator
 };
 
 #[Service]
-readonly class OptionController
+readonly class OptionController implements ConfigOptionController
 {
     private \SplObjectStorage $values;
 
