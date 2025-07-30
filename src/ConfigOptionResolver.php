@@ -30,7 +30,7 @@ class ConfigOptionResolver implements ParameterResolver
         $optionController = service(OptionController::class);
 
         if (!$optionController->hasValue($option)) {
-            // We don't throw an exception, because the parameter
+            // We don't throw an exception because the parameter
             // could be nullable, which means an unset config value
             // is allowed
             return new ParameterResolverResult(false);
