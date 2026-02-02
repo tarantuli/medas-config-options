@@ -36,7 +36,11 @@ class ConfigOptionResolver implements ParameterResolver
             return new ParameterResolverResult(false);
         }
 
-        return new ParameterResolverResult(true, $optionController->getValue($option));
+        $value = $optionController->getValue($option);
+
+        $this->deserializeValue($parameter, $value);
+
+        return new ParameterResolverResult(true, $value);
     }
 
     private function getConfigOption(\ReflectionAttribute $attribute): ConfigOption
@@ -56,5 +60,25 @@ class ConfigOptionResolver implements ParameterResolver
         }
 
         return $configOption;
+    }
+
+    private function deserializeValue(\ReflectionParameter|\ReflectionProperty $parameter, mixed &$value): void
+    {
+        $types = parameterTypes($parameter);
+
+        foreach ($types as $type) {
+            if ($type->getName() === 'bool') {
+                if ($value === 'true') {
+                    $value = true;
+                }
+                elseif ($value === 'false') {
+                    $value = false;
+                }
+            }
+
+            if ($type->allowsNull() && $value === 'null') {
+                $value = null;
+            }
+        }
     }
 }
