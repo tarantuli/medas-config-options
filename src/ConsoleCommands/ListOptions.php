@@ -103,4 +103,9 @@ readonly class ListOptions extends BaseConsoleCommand
 
         $this->printer->printLine(...$texts);
     }
+
+    public function aliases(): array
+    {
+        return ['options'];
+    }
 }
