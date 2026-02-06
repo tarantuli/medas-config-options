@@ -1,7 +1,7 @@
 {
   "name": "morphp/medas-config-options",
   "description": "Medas config options",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "keywords": [
     "configuration"
   ],
@@ -13,15 +13,15 @@
   ],
   "type": "library",
   "require": {
-    "morphp/medas-core": "^2",
-    "morphp/medas-console": "^2",
-    "php": "^8.4"
+    "morphp/medas-core": "^1",
+    "morphp/medas-console": "^1",
+    "php": "^8.2"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5",
-    "morphp/medas-config-manager": "^2",
-    "morphp/medas-service-manager": "^2",
-    "morphp/medas-console-printer": "^2"
+    "morphp/medas-config-manager": "^1",
+    "morphp/medas-service-manager": "^1",
+    "morphp/medas-console-printer": "^1"
   },
   "autoload": {
     "psr-4": {
