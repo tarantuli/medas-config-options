@@ -17,7 +17,12 @@ use Medas\Console\{
     Printer,
     Text
 };
-use Medas\Core\{Attributes\Service, CaseInsensitiveString, Interfaces\ConfigGroup};
+use Medas\Core\{
+    Attributes\Service,
+    CaseInsensitiveString,
+    Interfaces\ConfigGroup,
+    Interfaces\ConfigOption
+};
 
 #[Service]
 readonly class ListOptions extends BaseConsoleCommand
@@ -50,7 +55,7 @@ readonly class ListOptions extends BaseConsoleCommand
     {
         $collection = $this->collector->collect();
 
-        foreach ($collection->groups[0] as $group) {
+        foreach ($collection->rootGroups() as $group) {
             $this->processGroup(0, $group, $collection);
         }
     }
@@ -71,8 +76,10 @@ readonly class ListOptions extends BaseConsoleCommand
         }
     }
 
-    private function handleDescriptionAndDefault(int $depth, mixed $option): void
+    private function handleDescriptionAndDefault(int $depth, ConfigOption $option): void
     {
+        $texts = [];
+
         $texts[] = Text::create(
             str_repeat('  ', $depth + 1) . '# ' . $option->description(),
             Color::LightGray
@@ -87,7 +94,7 @@ readonly class ListOptions extends BaseConsoleCommand
         $this->printer->printLine(...$texts);
     }
 
-    private function handleNameAndValue(int $depth, mixed $option): void
+    private function handleNameAndValue(int $depth, ConfigOption $option): void
     {
         $texts = [];
         $texts[] = Text::create(str_repeat('  ', $depth + 1) . $option->name() . ': ');

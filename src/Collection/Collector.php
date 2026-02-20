@@ -29,7 +29,9 @@ readonly class Collector
         $configGroups = service(ImplementorFinder::class)->find(ConfigGroup::class);
 
         foreach ($configGroups as $configGroup) {
-            $parent = $configGroup->parent() ? $configGroup->parent()::class : 0;
+            $parent = $configGroup->parent()
+                ? $configGroup->parent()::class
+                : OptionCollection::ROOT_GROUP_KEY;
 
             if (!array_key_exists($parent, $groups)) {
                 $groups[$parent] = [];

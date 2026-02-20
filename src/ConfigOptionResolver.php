@@ -76,6 +76,14 @@ class ConfigOptionResolver implements ParameterResolver
                 }
             }
 
+            if ($type->getName() === 'int' && is_string($value) && ctype_digit(ltrim($value, '-'))) {
+                $value = (int) $value;
+            }
+
+            if ($type->getName() === 'float' && is_string($value) && is_numeric($value)) {
+                $value = (float) $value;
+            }
+
             if ($type->allowsNull() && $value === 'null') {
                 $value = null;
             }

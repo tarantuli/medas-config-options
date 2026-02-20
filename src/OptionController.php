@@ -50,9 +50,11 @@ readonly class OptionController implements ConfigOptionController
             return $value;
         }
         elseif ($option->hasDefault()) {
-            $this->values->attach($option, $option->default());
+            $default = $option->default();
 
-            return $option->default();
+            $this->values->attach($option, $default);
+
+            return $default;
         }
 
         throw new Exceptions\NoConfigValueFound($option);
