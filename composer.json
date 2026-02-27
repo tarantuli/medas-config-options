@@ -24,7 +24,11 @@
   },
   "autoload": {
     "psr-4": {
-      "Medas\\ConfigOptions\\": "src/",
+      "Medas\\ConfigOptions\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
       "Medas\\ConfigOptionsTest\\": "tests/"
     }
   }
