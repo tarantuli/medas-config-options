@@ -11,6 +11,7 @@ use Medas\ConfigOptions\{
     OptionController
 };
 use Medas\Console\{
+    Commands\Arguments,
     Commands\BaseConsoleCommand,
     Commands\ConsoleCommandGroup,
     Formats\Color,
@@ -51,39 +52,65 @@ readonly class ListOptions extends BaseConsoleCommand
         return 'Lists all options and default values';
     }
 
-    public function process(array $arguments): void
+    public function process(Arguments $arguments): void
     {
         $collection = $this->collector->collect();
 
         foreach ($collection->rootGroups() as $group) {
-            $this->processGroup(0, $group, $collection);
+            $this->processGroup(0, $group, $collection, $arguments);
         }
     }
 
-    private function processGroup(int $depth, ConfigGroup $group, OptionCollection $collection): void
+    private function processGroup(
+        int              $depth,
+        ConfigGroup      $group,
+        OptionCollection $collection,
+        Arguments        $arguments
+    ): void
     {
         $this->printer
             ->printLine(Text::create(str_repeat('  ', $depth) . $group->name() . ':', Color::LightYellow));
 
         foreach ($collection->options[$group::class] ?? [] as $option) {
+            if (isset($arguments->arguments[0]) && !$this->matchesFilter($option, $arguments->arguments[0])) {
+                continue;
+            }
+
             $this->handleDescriptionAndDefault($depth, $option);
             $this->handleNameAndValue($depth, $option);
             $this->printer->printEol();
         }
 
         foreach ($collection->groups[$group::class] ?? [] as $childGroup) {
-            $this->processGroup($depth + 1, $childGroup, $collection);
+            $this->processGroup($depth + 1, $childGroup, $collection, $arguments);
         }
+    }
+
+    private function matchesFilter(ConfigOption $option, string $filter): bool
+    {
+        if (str_contains($option->name(), $filter)) {
+            return true;
+        }
+
+        if (str_contains($option->description(), $filter)) {
+            return true;
+        }
+
+        return false;
     }
 
     private function handleDescriptionAndDefault(int $depth, ConfigOption $option): void
     {
         $texts = [];
+        $lines = explode("\n", $option->description());
+        $description = '';
 
-        $texts[] = Text::create(
-            str_repeat('  ', $depth + 1) . '# ' . $option->description(),
-            Color::LightGray
-        );
+        foreach ($lines as $line) {
+            $description .= str_repeat('  ', $depth + 1) . '# ' . trim($line) . "\n";
+        }
+
+        $description = rtrim($description);
+        $texts[] = Text::create($description, Color::LightGray);
 
         if ($option->hasDefault()) {
             $defaultAsString = CaseInsensitiveString::fromVariable($option->default(), true, true);
