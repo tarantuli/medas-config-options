@@ -14,6 +14,7 @@ use Medas\Console\{
     Commands\BaseConsoleCommand,
     Commands\CommandInput,
     Commands\ConsoleCommandGroup,
+    Commands\Range,
     Formats\Color,
     Printer,
     Text
@@ -52,9 +53,9 @@ readonly class ListOptions extends BaseConsoleCommand
         return 'Lists all options and default values';
     }
 
-    public function maxArgumentCount(): int
+    public function allowedArgumentCount(): Range
     {
-        return 1;
+        return new Range(0, 1);
     }
 
     public function process(CommandInput $input): void
