@@ -11,8 +11,8 @@ use Medas\ConfigOptions\{
     OptionController
 };
 use Medas\Console\{
-    Commands\Arguments,
     Commands\BaseConsoleCommand,
+    Commands\CommandInput,
     Commands\ConsoleCommandGroup,
     Formats\Color,
     Printer,
@@ -52,12 +52,17 @@ readonly class ListOptions extends BaseConsoleCommand
         return 'Lists all options and default values';
     }
 
-    public function process(Arguments $arguments): void
+    public function maxArgumentCount(): int
+    {
+        return 1;
+    }
+
+    public function process(CommandInput $input): void
     {
         $collection = $this->collector->collect();
 
         foreach ($collection->rootGroups() as $group) {
-            $this->processGroup(0, $group, $collection, $arguments);
+            $this->processGroup(0, $group, $collection, $input);
         }
     }
 
@@ -65,14 +70,14 @@ readonly class ListOptions extends BaseConsoleCommand
         int              $depth,
         ConfigGroup      $group,
         OptionCollection $collection,
-        Arguments        $arguments
+        CommandInput     $input
     ): void
     {
         $this->printer
             ->printLine(Text::create(str_repeat('  ', $depth) . $group->name() . ':', Color::LightYellow));
 
         foreach ($collection->options[$group::class] ?? [] as $option) {
-            if (isset($arguments->arguments[0]) && !$this->matchesFilter($option, $arguments->arguments[0])) {
+            if (isset($input->arguments[0]) && !$this->matchesFilter($option, $input->arguments[0])) {
                 continue;
             }
 
@@ -82,7 +87,7 @@ readonly class ListOptions extends BaseConsoleCommand
         }
 
         foreach ($collection->groups[$group::class] ?? [] as $childGroup) {
-            $this->processGroup($depth + 1, $childGroup, $collection, $arguments);
+            $this->processGroup($depth + 1, $childGroup, $collection, $input);
         }
     }
 
