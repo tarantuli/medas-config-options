@@ -21,14 +21,17 @@ use Medas\Console\{
 };
 use Medas\Core\{
     Attributes\Service,
-    CaseInsensitiveString,
     Interfaces\ConfigGroup,
-    Interfaces\ConfigOption
+    Interfaces\ConfigOption,
+    StringMaker,
+    StringMaker\Settings
 };
 
 #[Service]
 readonly class ListOptions extends BaseConsoleCommand
 {
+    private Settings $stringMakerSettings;
+
     public function __construct(
         private Collector        $collector,
         private Group            $group,
@@ -36,6 +39,12 @@ readonly class ListOptions extends BaseConsoleCommand
         private Printer          $printer,
     )
     {
+        $this->stringMakerSettings = new Settings(
+            quotesOnlyAroundWhitespace: true,
+            forceUtf8: true,
+            alwaysAddClass: true,
+            useObjectIds: false,
+        );
     }
 
     public function group(): ConsoleCommandGroup
@@ -78,7 +87,7 @@ readonly class ListOptions extends BaseConsoleCommand
             ->printLine(Text::create(str_repeat('  ', $depth) . $group->name() . ':', Color::LightYellow));
 
         foreach ($collection->options[$group::class] ?? [] as $option) {
-            if (isset($input->arguments[0]) && !$this->matchesFilter($option, $input->arguments[0])) {
+            if ($input->hasArgument(0) && !$this->matchesFilter($option, $input->getArgument(0))) {
                 continue;
             }
 
@@ -108,34 +117,77 @@ readonly class ListOptions extends BaseConsoleCommand
     private function handleDescriptionAndDefault(int $depth, ConfigOption $option): void
     {
         $texts = [];
-        $lines = explode("\n", $option->description());
-        $description = '';
-
-        foreach ($lines as $line) {
-            $description .= str_repeat('  ', $depth + 1) . '# ' . trim($line) . "\n";
-        }
-
-        $description = rtrim($description);
-        $texts[] = Text::create($description, Color::LightGray);
+        $description = $this->compileDescription($option, $depth);
+        $texts[] = Text::create($description, Color::Red);
 
         if ($option->hasDefault()) {
-            $defaultAsString = CaseInsensitiveString::fromVariable($option->default(), true, true);
-            $texts[] = Text::create(', default: ', Color::LightGray);
-            $texts[] = Text::create((string) $defaultAsString, Color::Blue);
+            $defaultAsString = StringMaker::instance()->fromVariable(
+                $option->default(),
+                $this->stringMakerSettings
+            );
+
+            $texts[] = Text::create(', default: ', Color::Red);
+            $texts[] = Text::create($defaultAsString, Color::Yellow);
         }
 
         $this->printer->printLine(...$texts);
     }
 
+    private function compileDescription(ConfigOption $option, int $depth): string
+    {
+        $paragraphs = explode("\n", $option->description());
+        $description = '';
+
+        foreach ($paragraphs as $paragraph) {
+            $indent = str_repeat('  ', $depth + 1) . '# ';
+            $availableWidth = 78 - mb_strlen($indent);
+            $words = preg_split('/\s+/', trim($paragraph), flags: PREG_SPLIT_NO_EMPTY);
+            $lines = [];
+            $currentLine = '';
+
+            foreach ($words as $word) {
+                if ($currentLine === '') {
+                    $currentLine = $word;
+                }
+                elseif (mb_strlen($currentLine) + 1 + mb_strlen($word) <= $availableWidth) {
+                    $currentLine .= ' ' . $word;
+                }
+                else {
+                    $lines[] = $currentLine;
+                    $currentLine = $word;
+                }
+            }
+
+            if ($currentLine !== '') {
+                $lines[] = $currentLine;
+            }
+
+            foreach ($lines as $line) {
+                $description .= $indent . $line . "\n";
+            }
+        }
+
+        return rtrim($description);
+    }
+
     private function handleNameAndValue(int $depth, ConfigOption $option): void
     {
         $texts = [];
-        $texts[] = Text::create(str_repeat('  ', $depth + 1) . $option->name() . ': ');
+
+        $texts[] = Text::create(
+            str_repeat('  ', $depth + 1) . $option->name() . ': ',
+            Color::LightGray
+        );
 
         try {
             $value = $this->optionController->getValue($option);
-            $valueAsString = CaseInsensitiveString::fromVariable($value, false, true);
-            $texts[] = Text::create((string) $valueAsString);
+
+            $valueAsString = StringMaker::instance()->fromVariable(
+                $value,
+                $this->stringMakerSettings
+            );
+
+            $texts[] = Text::create($valueAsString, Color::Green);
         }
         catch (NoConfigValueFound) {
             $texts[] = Text::create('no value found', Color::LightRed);
