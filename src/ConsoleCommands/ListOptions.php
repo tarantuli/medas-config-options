@@ -15,7 +15,7 @@ use Medas\Console\{
     Commands\CommandInput,
     Commands\ConsoleCommandGroup,
     Commands\Range,
-    Formats\Color,
+    Formats\SafeColor,
     Printer,
     Text
 };
@@ -84,7 +84,7 @@ readonly class ListOptions extends BaseConsoleCommand
     ): void
     {
         $this->printer
-            ->printLine(Text::create(str_repeat('  ', $depth) . $group->name() . ':', Color::LightYellow));
+            ->printLine(Text::create(str_repeat('  ', $depth) . $group->name() . ':', SafeColor::LightYellow));
 
         foreach ($collection->options[$group::class] ?? [] as $option) {
             if ($input->hasArgument(0) && !$this->matchesFilter($option, $input->getArgument(0))) {
@@ -118,7 +118,7 @@ readonly class ListOptions extends BaseConsoleCommand
     {
         $texts = [];
         $description = $this->compileDescription($option, $depth);
-        $texts[] = Text::create($description, Color::Red);
+        $texts[] = Text::create($description, SafeColor::Red);
 
         if ($option->hasDefault()) {
             $defaultAsString = StringMaker::instance()->fromVariable(
@@ -126,8 +126,8 @@ readonly class ListOptions extends BaseConsoleCommand
                 $this->stringMakerSettings
             );
 
-            $texts[] = Text::create(', default: ', Color::Red);
-            $texts[] = Text::create($defaultAsString, Color::Yellow);
+            $texts[] = Text::create(', default: ', SafeColor::Red);
+            $texts[] = Text::create($defaultAsString, SafeColor::Yellow);
         }
 
         $this->printer->printLine(...$texts);
@@ -176,7 +176,7 @@ readonly class ListOptions extends BaseConsoleCommand
 
         $texts[] = Text::create(
             str_repeat('  ', $depth + 1) . $option->name() . ': ',
-            Color::LightGray
+            SafeColor::LightGray
         );
 
         try {
@@ -187,10 +187,10 @@ readonly class ListOptions extends BaseConsoleCommand
                 $this->stringMakerSettings
             );
 
-            $texts[] = Text::create($valueAsString, Color::Green);
+            $texts[] = Text::create($valueAsString, SafeColor::Green);
         }
         catch (NoConfigValueFound) {
-            $texts[] = Text::create('no value found', Color::LightRed);
+            $texts[] = Text::create('no value found', SafeColor::LightRed);
         }
 
         $this->printer->printLine(...$texts);
