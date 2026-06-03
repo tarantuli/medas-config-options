@@ -206,12 +206,12 @@ MAIL_FROM_ADDRESS=sender@myapp.com
 **Listing all options from the console:**
 
 ```bash
-php bin/console config-options:list
+php bin/medas config-options:list
 # or
-php bin/console config-options:options
+php bin/medas config-options:options
 
 # Filter by name or description substring
-php bin/console config-options:list from
+php bin/medas config-options:list from
 ```
 
 Example output:
