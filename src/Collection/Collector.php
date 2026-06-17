@@ -6,14 +6,23 @@ namespace Medas\ConfigOptions\Collection;
 
 use Medas\Core\{
     Attributes\Service,
+    CachedImplementorList,
     Interfaces\ConfigGroup,
-    Interfaces\ConfigOption,
-    Interfaces\ImplementorFinder
+    Interfaces\ConfigOption
 };
 
 #[Service]
 readonly class Collector
 {
+    private CachedImplementorList $configGroups;
+    private CachedImplementorList $configOptions;
+
+    public function __construct()
+    {
+        $this->configGroups = new CachedImplementorList(ConfigGroup::class);
+        $this->configOptions = new CachedImplementorList(ConfigOption::class);
+    }
+
     public function collect(): OptionCollection
     {
         $groups = $this->gatherGroups();
@@ -26,9 +35,8 @@ readonly class Collector
     private function gatherGroups(): array
     {
         $groups = [];
-        $configGroups = service(ImplementorFinder::class)->find(ConfigGroup::class);
 
-        foreach ($configGroups as $configGroup) {
+        foreach ($this->configGroups->get() as $configGroup) {
             $parent = $configGroup->parent()
                 ? $configGroup->parent()::class
                 : OptionCollection::ROOT_GROUP_KEY;
@@ -47,9 +55,8 @@ readonly class Collector
     private function gatherOptions(): array
     {
         $options = [];
-        $configOptions = service(ImplementorFinder::class)->find(ConfigOption::class);
 
-        foreach ($configOptions as $configOption) {
+        foreach ($this->configOptions->get() as $configOption) {
             $group = $configOption->group()::class;
 
             if (!array_key_exists($group, $options)) {
