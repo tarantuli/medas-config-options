@@ -11,10 +11,10 @@ use Medas\ConfigOptions\{
     OptionController
 };
 use Medas\Console\{
+    Commands\Argument,
     Commands\BaseConsoleCommand,
     Commands\CommandInput,
     Commands\ConsoleCommandGroup,
-    Commands\Range,
     Formats\SafeColor,
     Printer,
     Text
@@ -62,9 +62,9 @@ readonly class ListOptions extends BaseConsoleCommand
         return 'Lists all options and default values';
     }
 
-    public function allowedArgumentCount(): Range
+    public function arguments(): array
     {
-        return new Range(0, 1);
+        return [Argument::optional('filter', description: 'Filter options by name or description')];
     }
 
     public function process(CommandInput $input): void
@@ -87,7 +87,7 @@ readonly class ListOptions extends BaseConsoleCommand
             ->printLine(Text::create(str_repeat('  ', $depth) . $group->name() . ':', SafeColor::LightYellow));
 
         foreach ($collection->options[$group::class] ?? [] as $option) {
-            if ($input->hasArgument(0) && !$this->matchesFilter($option, $input->getArgument(0))) {
+            if ($input->hasArgument('filter') && !$this->matchesFilter($option, $input->getArgument('filter'))) {
                 continue;
             }
 
