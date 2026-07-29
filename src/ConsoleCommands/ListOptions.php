@@ -64,15 +64,24 @@ readonly class ListOptions extends BaseConsoleCommand
 
     public function arguments(): array
     {
-        return [Argument::optional('filter', description: 'Filter options by name or description')];
+        return [
+            Argument::variadic('filter', description: 'Filter options by name or description'),
+        ];
     }
 
     public function process(CommandInput $input): void
     {
         $collection = $this->collector->collect();
+        $filters = [];
+
+        if ($input->hasArgument('filter')) {
+            foreach ($input->getArgument('filter') as $filter) {
+                $filters[] = strtolower($filter);
+            }
+        }
 
         foreach ($collection->rootGroups() as $group) {
-            $this->processGroup(0, $group, $collection, $input);
+            $this->processGroup(0, $group, $collection, $input, $filters);
         }
     }
 
@@ -80,15 +89,31 @@ readonly class ListOptions extends BaseConsoleCommand
         int              $depth,
         ConfigGroup      $group,
         OptionCollection $collection,
-        CommandInput     $input
+        CommandInput     $input,
+        array            $filters,
+        array            $unprintedNames = []
     ): void
     {
-        $this->printer
-            ->printLine(Text::create(str_repeat('  ', $depth) . $group->name() . ':', SafeColor::LightYellow));
+        if ($input->hasArgument('filter')) {
+            $unprintedNames[$depth] = $group->name();
+        }
+        else {
+            $this->printer
+                ->printLine(Text::create(str_repeat('  ', $depth) . $group->name() . ':', SafeColor::LightYellow));
+        }
 
         foreach ($collection->options[$group::class] ?? [] as $option) {
-            if ($input->hasArgument('filter') && !$this->matchesFilter($option, $input->getArgument('filter'))) {
+            if ($input->hasArgument('filter') && !$this->matchesFilter($option, $filters)) {
                 continue;
+            }
+
+            if ($unprintedNames) {
+                foreach ($unprintedNames as $unprintedDepth => $name) {
+                    $this->printer
+                        ->printLine(Text::create(str_repeat('  ', $unprintedDepth) . $name . ':', SafeColor::LightYellow));
+                }
+
+                $unprintedNames = [];
             }
 
             $this->handleDescriptionAndDefault($depth, $option);
@@ -97,21 +122,22 @@ readonly class ListOptions extends BaseConsoleCommand
         }
 
         foreach ($collection->groups[$group::class] ?? [] as $childGroup) {
-            $this->processGroup($depth + 1, $childGroup, $collection, $input);
+            $this->processGroup(
+                $depth + 1,
+                $childGroup,
+                $collection,
+                $input,
+                $filters,
+                $unprintedNames
+            );
         }
     }
 
-    private function matchesFilter(ConfigOption $option, string $filter): bool
+    private function matchesFilter(ConfigOption $option, array $filters): bool
     {
-        if (str_contains($option->name(), $filter)) {
-            return true;
-        }
+        $text = strtolower($option->name() . ' ' . $option->description());
 
-        if (str_contains($option->description(), $filter)) {
-            return true;
-        }
-
-        return false;
+        return array_all($filters, fn($filter) => str_contains($text, $filter));
     }
 
     private function handleDescriptionAndDefault(int $depth, ConfigOption $option): void
