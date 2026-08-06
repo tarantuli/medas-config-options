@@ -15,6 +15,7 @@ use Medas\Console\{
     Commands\BaseConsoleCommand,
     Commands\CommandInput,
     Commands\ConsoleCommandGroup,
+    Commands\Option,
     Formats\SafeColor,
     Printer,
     Text
@@ -70,6 +71,13 @@ readonly class ListOptions extends BaseConsoleCommand
         ];
     }
 
+    public function options(): array
+    {
+        return [
+            Option::noValue('show-sensitive', 's', description: 'Show sensitive options'),
+        ];
+    }
+
     public function process(CommandInput $input): void
     {
         $collection = $this->collector->collect();
@@ -103,6 +111,8 @@ readonly class ListOptions extends BaseConsoleCommand
                 ->printLine(Text::create(str_repeat('  ', $depth) . $group->name() . ':', SafeColor::LightYellow));
         }
 
+        $showSensitive = $input->hasOption('show-sensitive');
+
         foreach ($collection->options[$group::class] ?? [] as $option) {
             if ($input->hasArgument('filter') && !$this->matchesFilter($option, $filters)) {
                 continue;
@@ -118,7 +128,7 @@ readonly class ListOptions extends BaseConsoleCommand
             }
 
             $this->handleDescriptionAndDefault($depth, $option);
-            $this->handleNameAndValue($depth, $option);
+            $this->handleNameAndValue($depth, $option, $showSensitive);
             $this->printer->printEol();
         }
 
@@ -197,7 +207,7 @@ readonly class ListOptions extends BaseConsoleCommand
         return rtrim($description);
     }
 
-    private function handleNameAndValue(int $depth, ConfigOption $option): void
+    private function handleNameAndValue(int $depth, ConfigOption $option, bool $showSensitive): void
     {
         $texts = [];
 
@@ -206,7 +216,7 @@ readonly class ListOptions extends BaseConsoleCommand
             SafeColor::LightGray
         );
 
-        if ($option instanceof IsSensitive) {
+        if (!$showSensitive && $option instanceof IsSensitive) {
             $texts[] = Text::create('[REDACTED]', SafeColor::Gray);
         }
         else {
