@@ -23,6 +23,7 @@ use Medas\Core\{
     Attributes\Service,
     Interfaces\ConfigGroup,
     Interfaces\ConfigOption,
+    Interfaces\IsSensitive,
     StringMaker,
     StringMaker\Settings
 };
@@ -205,18 +206,23 @@ readonly class ListOptions extends BaseConsoleCommand
             SafeColor::LightGray
         );
 
-        try {
-            $value = $this->optionController->getValue($option);
-
-            $valueAsString = StringMaker::instance()->fromVariable(
-                $value,
-                $this->stringMakerSettings
-            );
-
-            $texts[] = Text::create($valueAsString, SafeColor::Green);
+        if ($option instanceof IsSensitive) {
+            $texts[] = Text::create('[REDACTED]', SafeColor::DarkRed);
         }
-        catch (NoConfigValueFound) {
-            $texts[] = Text::create('no value found', SafeColor::LightRed);
+        else {
+            try {
+                $value = $this->optionController->getValue($option);
+
+                $valueAsString = StringMaker::instance()->fromVariable(
+                    $value,
+                    $this->stringMakerSettings
+                );
+
+                $texts[] = Text::create($valueAsString, SafeColor::Green);
+            }
+            catch (NoConfigValueFound) {
+                $texts[] = Text::create('no value found', SafeColor::LightRed);
+            }
         }
 
         $this->printer->printLine(...$texts);
