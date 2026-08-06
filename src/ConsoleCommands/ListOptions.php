@@ -207,7 +207,7 @@ readonly class ListOptions extends BaseConsoleCommand
         );
 
         if ($option instanceof IsSensitive) {
-            $texts[] = Text::create('[REDACTED]', SafeColor::DarkRed);
+            $texts[] = Text::create('[REDACTED]', SafeColor::Gray);
         }
         else {
             try {
