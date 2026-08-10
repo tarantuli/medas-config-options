@@ -231,7 +231,7 @@ readonly class ListOptions extends BaseConsoleCommand
                 $texts[] = Text::create($valueAsString, SafeColor::Green);
             }
             catch (NoConfigValueFound) {
-                $texts[] = Text::create('no value found', SafeColor::LightRed);
+                $texts[] = Text::create('[NO VALUE]', SafeColor::LightBlue);
             }
         }
 
