@@ -7,26 +7,45 @@ namespace Medas\ConfigOptions;
 use Medas\Core\{
     Attributes\ConfigValue,
     Attributes\Service,
+    HandlesByCompiling,
+    Interfaces\CompilableParameterResolver,
     Interfaces\ConfigOption,
-    Interfaces\ParameterResolver,
     ParameterResolverResult
 };
 
 #[Service]
-class ConfigOptionResolver implements ParameterResolver
+class ConfigOptionResolver implements CompilableParameterResolver
 {
+    use HandlesByCompiling;
+
     public function priority(): int
     {
         return -100;
     }
 
-    public function handle(\ReflectionParameter|\ReflectionProperty $parameter): ParameterResolverResult
+    public function compile(\ReflectionParameter|\ReflectionProperty $parameter): CompiledConfigValue|null
     {
         if (!$attributes = $parameter->getAttributes(ConfigValue::class)) {
-            return new ParameterResolverResult(false);
+            return null;
         }
 
-        $option = $this->getConfigOption($attributes[0]);
+        /** @var ConfigValue $configValue */
+        $configValue = $attributes[0]->newInstance();
+
+        $types = array_map(
+            static fn(\ReflectionNamedType $type): array => [$type->getName(), $type->allowsNull()],
+            normalizeType($parameter->getType())
+        );
+
+        return new CompiledConfigValue($configValue->configOption, $types);
+    }
+
+    /**
+     * @param CompiledConfigValue $compiled
+     */
+    public function resolveCompiled(object $compiled): ParameterResolverResult
+    {
+        $option = $this->getConfigOption($compiled->configOption);
         $optionController = service(OptionController::class);
 
         if (!$optionController->hasValue($option)) {
@@ -38,17 +57,13 @@ class ConfigOptionResolver implements ParameterResolver
 
         $value = $optionController->getValue($option);
 
-        $this->deserializeValue($parameter, $value);
+        $this->deserializeValue($compiled->types, $value);
 
         return new ParameterResolverResult(true, $value);
     }
 
-    private function getConfigOption(\ReflectionAttribute $attribute): ConfigOption
+    private function getConfigOption(string $configOptionClass): ConfigOption
     {
-        /** @var ConfigValue $configValue */
-        $configValue = $attribute->newInstance();
-        $configOptionClass = $configValue->configOption;
-
         if (!class_exists($configOptionClass)) {
             throw new Exceptions\ConfigValueDoesNotImplementOption($configOptionClass);
         }
@@ -62,12 +77,13 @@ class ConfigOptionResolver implements ParameterResolver
         return $configOption;
     }
 
-    private function deserializeValue(\ReflectionParameter|\ReflectionProperty $parameter, mixed &$value): void
+    /**
+     * @param list<array{string, bool}> $types
+     */
+    private function deserializeValue(array $types, mixed &$value): void
     {
-        $types = parameterTypes($parameter);
-
-        foreach ($types as $type) {
-            if ($type->getName() === 'bool') {
+        foreach ($types as [$typeName, $allowsNull]) {
+            if ($typeName === 'bool') {
                 if ($value === 'true') {
                     $value = true;
                 }
@@ -76,15 +92,15 @@ class ConfigOptionResolver implements ParameterResolver
                 }
             }
 
-            if ($type->getName() === 'int' && is_string($value) && ctype_digit(ltrim($value, '-'))) {
+            if ($typeName === 'int' && is_string($value) && ctype_digit(ltrim($value, '-'))) {
                 $value = (int) $value;
             }
 
-            if ($type->getName() === 'float' && is_string($value) && is_numeric($value)) {
+            if ($typeName === 'float' && is_string($value) && is_numeric($value)) {
                 $value = (float) $value;
             }
 
-            if ($type->allowsNull() && $value === 'null') {
+            if ($allowsNull && $value === 'null') {
                 $value = null;
             }
         }
