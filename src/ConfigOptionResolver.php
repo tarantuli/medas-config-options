@@ -43,18 +43,16 @@ class ConfigOptionResolver implements CompilableParameterResolver
         $option = $this->getConfigOption($configValue->configOption);
         $hasDefault = $option->hasDefault();
         $default = $hasDefault ? $option->default() : null;
-
-        $readsThroughOption = $option instanceof Validator
-            || $option instanceof Serializer
-            || !$this->canBeStored($default);
+        $defaultThroughOption = !$this->canBeStored($default);
 
         return new CompiledConfigValue(
             configOption: $configValue->configOption,
             types: $types,
-            readsThroughOption: $readsThroughOption,
+            configuredValueThroughOption: $option instanceof Validator || $option instanceof Serializer,
+            defaultThroughOption: $defaultThroughOption,
             path: service(OptionController::class)->getPath($option),
             hasDefault: $hasDefault,
-            default: $readsThroughOption ? null : $default,
+            default: $defaultThroughOption ? null : $default,
             sourceFiles: $this->sourceFiles($option),
         );
     }
@@ -92,8 +90,15 @@ class ConfigOptionResolver implements CompilableParameterResolver
      */
     public function resolveCompiled(object $compiled): ParameterResolverResult
     {
-        if (!$compiled->readsThroughOption) {
-            return $this->resolveByPath($compiled);
+        $configManager = service(ConfigManager::class);
+        $isConfigured = $configManager->hasValue($compiled->path);
+
+        $needsOption = $isConfigured
+            ? $compiled->configuredValueThroughOption
+            : $compiled->defaultThroughOption;
+
+        if (!$needsOption) {
+            return $this->resolveByPath($compiled, $configManager, $isConfigured);
         }
 
         $option = $this->getConfigOption($compiled->configOption);
@@ -113,13 +118,15 @@ class ConfigOptionResolver implements CompilableParameterResolver
         return new ParameterResolverResult(true, $value);
     }
 
-    // The same outcome as OptionController::hasValue() and getValue() for an option without
-    // behaviour of its own, but without creating the option and its groups
-    private function resolveByPath(CompiledConfigValue $compiled): ParameterResolverResult
+    // The same outcome as OptionController::hasValue() and getValue() wherever the option has
+    // no say (see CompiledConfigValue), but without creating the option and its groups
+    private function resolveByPath(
+        CompiledConfigValue $compiled,
+        ConfigManager       $configManager,
+        bool                $isConfigured,
+    ): ParameterResolverResult
     {
-        $configManager = service(ConfigManager::class);
-
-        if ($configManager->hasValue($compiled->path)) {
+        if ($isConfigured) {
             $value = $configManager->getValue($compiled->path);
         }
         elseif ($compiled->hasDefault) {

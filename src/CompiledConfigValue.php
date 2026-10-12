@@ -11,8 +11,10 @@ use Medas\Core\Interfaces\DependsOnSourceFiles;
  * plus the declared types, which the string value from the configuration is converted to.
  *
  * The option's path and default are taken over from the option when the plan is compiled, so the value can be read
- * without creating the option and its groups on every request. An option with behaviour of its own (it validates or
- * unserializes its value, or its default can't be stored) is still asked at run time: see $readsThroughOption.
+ * without creating the option and its groups on every request. Only where the option has a say is it still asked at
+ * run time: for a configured value when it validates or unserializes values, and for its default when that can't be
+ * stored in the plan. A default is never validated, so an option that validates is not needed when nothing is
+ * configured.
  */
 readonly class CompiledConfigValue implements DependsOnSourceFiles
 {
@@ -23,7 +25,8 @@ readonly class CompiledConfigValue implements DependsOnSourceFiles
     public function __construct(
         public string $configOption,
         public array  $types,
-        public bool   $readsThroughOption,
+        public bool   $configuredValueThroughOption,
+        public bool   $defaultThroughOption,
         public string $path,
         public bool   $hasDefault,
         public mixed  $default,

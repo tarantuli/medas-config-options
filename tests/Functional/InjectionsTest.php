@@ -48,7 +48,8 @@ class InjectionsTest extends TestCase
     {
         $compiled = $this->compile(MockServiceWithDefaultInjection::class);
 
-        $this->assertFalse($compiled->readsThroughOption);
+        $this->assertFalse($compiled->configuredValueThroughOption);
+        $this->assertFalse($compiled->defaultThroughOption);
         $this->assertSame('mock-group.with-default', $compiled->path);
         $this->assertTrue($compiled->hasDefault);
         $this->assertSame(MockOptionWithDefault::DEFAULT, $compiled->default);
@@ -62,7 +63,7 @@ class InjectionsTest extends TestCase
     // The configured project is "service-manager"; only the option turns it into capitals
     public function testAnOptionThatTransformsItsValueIsStillAskedForIt(): void
     {
-        $this->assertTrue($this->compile(MockServiceWithUppercasedInjection::class)->readsThroughOption);
+        $this->assertTrue($this->compile(MockServiceWithUppercasedInjection::class)->configuredValueThroughOption);
 
         $this->assertSame(
             'SERVICE-MANAGER',
