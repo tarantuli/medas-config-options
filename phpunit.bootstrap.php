@@ -7,7 +7,7 @@ use Medas\ConfigOptions\ConfigOptionsPackage;
 use Medas\ConfigOptionsTest\MockUps\MockPackage;
 use Medas\ConsolePrinter\ConsolePrinterPackage;
 use Medas\Core\Interfaces\ConfigManager;
-use Medas\ObjectInstantiator\ObjectInstantiator;
+use Medas\ObjectInstantiator\{ObjectInstantiator, ObjectInstantiatorPackage};
 use Medas\ServiceManager\{ServiceConfigBuilder, ServiceManager};
 
 chdir(__DIR__);
@@ -20,6 +20,7 @@ new ServiceManager(function (): ServiceConfigBuilder {
         ConfigManagerPackage::instance(),
         ConsolePrinterPackage::instance(),
         MockPackage::instance(),
+        ObjectInstantiatorPackage::instance(),
     ]);
 
     return $config;

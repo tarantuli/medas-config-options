@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptionsTest\MockUps;
 
-use Medas\Core\Attributes\Service;
-use Medas\Core\Interfaces\{ConfigGroup, ConfigOption};
+use Medas\Core\{Attributes\Service, Interfaces\ConfigGroup, Interfaces\ConfigOption};
 
 #[Service]
 readonly class MockConfigOption implements ConfigOption

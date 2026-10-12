@@ -10,7 +10,8 @@ use Medas\Core\Attributes\{ConfigValue, Service};
 readonly class MockServiceWithConfigInjection
 {
     public function __construct(
-        #[ConfigValue(MockConfigOption::class)] private string $project,
+        #[ConfigValue(MockConfigOption::class)]
+        private string $project,
     )
     {
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptionsTest\Functional;
 
-use Medas\ConfigOptions\Collection\Collector;
+use Medas\ConfigOptions\Collection\{Collector, OptionCollection};
 use Medas\ConfigOptionsTest\MockUps\MockConfigGroup;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +14,7 @@ class CollectorTest extends TestCase
     {
         $result = service(Collector::class)->collect();
 
-        self::assertArrayHasKey(0, $result->groups);
+        self::assertArrayHasKey(OptionCollection::ROOT_GROUP_KEY, $result->groups);
         self::assertArrayHasKey(MockConfigGroup::class, $result->groups);
     }
 }

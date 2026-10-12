@@ -10,7 +10,8 @@ use Medas\Core\Attributes\{ConfigValue, Service};
 readonly class MockServiceWithInvalidConfigInjection
 {
     public function __construct(
-        #[ConfigValue('project')] private string $project,
+        #[ConfigValue('project')]
+        private string $project,
     )
     {
     }

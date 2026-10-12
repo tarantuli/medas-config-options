@@ -16,7 +16,6 @@ class ConfigOptionTest extends TestCase
         $option = service(MockConfigOption::class);
         $controller = service(OptionController::class);
         $manager = service(ConfigManager::class);
-
         $value = $manager->getValue($controller->getPath($option));
 
         self::assertEquals('service-manager', $value);

@@ -9,7 +9,10 @@ use Medas\Core\{
     Attributes\Service,
     HandlesByCompiling,
     Interfaces\CompilableParameterResolver,
+    Interfaces\ConfigManager,
     Interfaces\ConfigOption,
+    Interfaces\Serializer,
+    Interfaces\Validator,
     ParameterResolverResult
 };
 
@@ -37,7 +40,51 @@ class ConfigOptionResolver implements CompilableParameterResolver
             normalizeType($parameter->getType())
         );
 
-        return new CompiledConfigValue($configValue->configOption, $types);
+        $option = $this->getConfigOption($configValue->configOption);
+        $hasDefault = $option->hasDefault();
+        $default = $hasDefault ? $option->default() : null;
+
+        $readsThroughOption = $option instanceof Validator
+            || $option instanceof Serializer
+            || !$this->canBeStored($default);
+
+        return new CompiledConfigValue(
+            configOption: $configValue->configOption,
+            types: $types,
+            readsThroughOption: $readsThroughOption,
+            path: service(OptionController::class)->getPath($option),
+            hasDefault: $hasDefault,
+            default: $readsThroughOption ? null : $default,
+            sourceFiles: $this->sourceFiles($option),
+        );
+    }
+
+    // The compiled plan is cached in serialized form, and an object other than an enum case
+    // would come back as a different instance, so such a default is asked of the option itself
+    private function canBeStored(mixed $value): bool
+    {
+        if (is_object($value)) {
+            return $value instanceof \UnitEnum;
+        }
+
+        if (is_array($value)) {
+            return array_all($value, fn(mixed $item): bool => $this->canBeStored($item));
+        }
+
+        return true;
+    }
+
+    /** @return string[] */
+    private function sourceFiles(ConfigOption $option): array
+    {
+        $files = [new \ReflectionClass($option)->getFileName()];
+        $group = $option->group();
+
+        do {
+            $files[] = new \ReflectionClass($group)->getFileName();
+        } while ($group = $group->parent());
+
+        return array_values(array_filter($files));
     }
 
     /**
@@ -45,6 +92,10 @@ class ConfigOptionResolver implements CompilableParameterResolver
      */
     public function resolveCompiled(object $compiled): ParameterResolverResult
     {
+        if (!$compiled->readsThroughOption) {
+            return $this->resolveByPath($compiled);
+        }
+
         $option = $this->getConfigOption($compiled->configOption);
         $optionController = service(OptionController::class);
 
@@ -56,6 +107,27 @@ class ConfigOptionResolver implements CompilableParameterResolver
         }
 
         $value = $optionController->getValue($option);
+
+        $this->deserializeValue($compiled->types, $value);
+
+        return new ParameterResolverResult(true, $value);
+    }
+
+    // The same outcome as OptionController::hasValue() and getValue() for an option without
+    // behaviour of its own, but without creating the option and its groups
+    private function resolveByPath(CompiledConfigValue $compiled): ParameterResolverResult
+    {
+        $configManager = service(ConfigManager::class);
+
+        if ($configManager->hasValue($compiled->path)) {
+            $value = $configManager->getValue($compiled->path);
+        }
+        elseif ($compiled->hasDefault) {
+            $value = $compiled->default;
+        }
+        else {
+            return new ParameterResolverResult(false);
+        }
 
         $this->deserializeValue($compiled->types, $value);
 

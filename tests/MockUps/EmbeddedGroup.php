@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Medas\ConfigOptionsTest\MockUps;
 
-use Medas\Core\Attributes\Service;
-use Medas\Core\Interfaces\ConfigGroup;
+use Medas\Core\{Attributes\Service, Interfaces\ConfigGroup};
 
 #[Service]
 readonly class EmbeddedGroup implements ConfigGroup
