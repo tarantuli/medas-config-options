@@ -57,16 +57,16 @@
         },
         {
             "name": "morphp/medas-core",
-            "version": "v4.6.0",
+            "version": "v4.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tarantuli/medas-core.git",
-                "reference": "abaf1738d2e8444b695a5572e29f7d1843d4cb3f"
+                "reference": "b09da1f852df699017b1404e6e7f528d82ae6ecb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantuli/medas-core/zipball/abaf1738d2e8444b695a5572e29f7d1843d4cb3f",
-                "reference": "abaf1738d2e8444b695a5572e29f7d1843d4cb3f",
+                "url": "https://api.github.com/repos/tarantuli/medas-core/zipball/b09da1f852df699017b1404e6e7f528d82ae6ecb",
+                "reference": "b09da1f852df699017b1404e6e7f528d82ae6ecb",
                 "shasum": ""
             },
             "require": {
@@ -99,10 +99,10 @@
                 "medas"
             ],
             "support": {
-                "source": "https://github.com/tarantuli/medas-core/tree/v4.6.0",
+                "source": "https://github.com/tarantuli/medas-core/tree/v4.8.1",
                 "issues": "https://github.com/tarantuli/medas-core/issues"
             },
-            "time": "2026-10-12T12:18:00+00:00"
+            "time": "2026-10-22T07:15:36+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -375,16 +375,16 @@
         },
         {
             "name": "morphp/medas-service-manager",
-            "version": "v4.0.21",
+            "version": "v4.0.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tarantuli/medas-service-manager.git",
-                "reference": "8d81e41470cfb1f386a2861de8584d9b662011a4"
+                "reference": "b67cfd30bd23a5d9f2cfa4529d8a5fe9664d0d7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantuli/medas-service-manager/zipball/8d81e41470cfb1f386a2861de8584d9b662011a4",
-                "reference": "8d81e41470cfb1f386a2861de8584d9b662011a4",
+                "url": "https://api.github.com/repos/tarantuli/medas-service-manager/zipball/b67cfd30bd23a5d9f2cfa4529d8a5fe9664d0d7a",
+                "reference": "b67cfd30bd23a5d9f2cfa4529d8a5fe9664d0d7a",
                 "shasum": ""
             },
             "require": {
@@ -418,10 +418,10 @@
                 "services"
             ],
             "support": {
-                "source": "https://github.com/tarantuli/medas-service-manager/tree/v4.0.21",
+                "source": "https://github.com/tarantuli/medas-service-manager/tree/v4.0.23",
                 "issues": "https://github.com/tarantuli/medas-service-manager/issues"
             },
-            "time": "2026-10-12T08:39:46+00:00"
+            "time": "2026-10-16T09:00:51+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2425,16 +2425,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v7.4.20",
+            "version": "v7.4.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "0222bf4dfaa1e3ceb8fff579635d655f2950d5a7"
+                "reference": "044907929c7999814378be22da34722c7a86bad4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/0222bf4dfaa1e3ceb8fff579635d655f2950d5a7",
-                "reference": "0222bf4dfaa1e3ceb8fff579635d655f2950d5a7",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/044907929c7999814378be22da34722c7a86bad4",
+                "reference": "044907929c7999814378be22da34722c7a86bad4",
                 "shasum": ""
             },
             "require": {
@@ -2477,7 +2477,7 @@
             "description": "Loads and dumps YAML files",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/yaml/tree/v7.4.20"
+                "source": "https://github.com/symfony/yaml/tree/v7.4.21"
             },
             "funding": [
                 {
@@ -2497,7 +2497,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-26T06:31:10+00:00"
+            "time": "2026-10-12T12:34:30+00:00"
         },
         {
             "name": "theseer/tokenizer",

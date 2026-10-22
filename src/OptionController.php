@@ -27,7 +27,7 @@ readonly class OptionController implements ConfigOptionController
 
     public function getValue(ConfigOption $option): mixed
     {
-        if ($this->values->contains($option)) {
+        if ($this->values->offsetExists($option)) {
             return $this->values[$option];
         }
 
@@ -45,7 +45,7 @@ readonly class OptionController implements ConfigOptionController
                 $value = $option->unserialize($value);
             }
 
-            $this->values->attach($option, $value);
+            $this->values->offsetSet($option, $value);
 
             return $value;
         }
