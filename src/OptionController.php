@@ -52,7 +52,7 @@ readonly class OptionController implements ConfigOptionController
         elseif ($option->hasDefault()) {
             $default = $option->default();
 
-            $this->values->attach($option, $default);
+            $this->values->offsetSet($option, $default);
 
             return $default;
         }
